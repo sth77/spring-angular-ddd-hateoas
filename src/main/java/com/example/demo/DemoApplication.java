@@ -6,7 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.example.demo.productionorders.ProductionOrder;
-import com.example.demo.productionorders.ProductionOrderRepository;
+import com.example.demo.productionorders.ProductionOrders;
 
 import lombok.RequiredArgsConstructor;
 
@@ -14,13 +14,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DemoApplication implements ApplicationRunner {
 	
-	private final ProductionOrderRepository repository;
+	private final ProductionOrders repository;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		repository.save(ProductionOrder.create("Order 1"));
 		repository.save(ProductionOrder.create("Order 2"));
-		repository.save(ProductionOrder.create("Order 3"));
 	}	
 	
 	public static void main(String[] args) {

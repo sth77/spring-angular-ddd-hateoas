@@ -9,7 +9,9 @@ const REL = "productionOrders";
   selector: 'app-production-order-list',
   template: `
   <ul>
-    <li *ngFor="let order of productionOrders">{{order.name}} ({{order.state}})
+    <li *ngFor="let order of productionOrders">{{order.name}} <span *ngIf="order.expectedCompletionDate">
+      Expected for {{order.expectedCompletionDate|date}}</span> ({{order.state}})
+      <button *ngIf="can('rename', order)" (click)="do('rename', order)">rename</button>
       <button *ngIf="can('submit', order)" (click)="do('submit', order)">submit</button>
       <button *ngIf="can('accept', order)" (click)="do('accept', order)">accept</button>
     </li>
@@ -39,10 +41,28 @@ export class ProductionOrderListComponent implements OnInit {
   }
 
   do(action: string, order: ProductionOrderResource): void {
+    var body = {};
+    if (action === 'rename') {
+      const newName = prompt("Please enter the new name:");
+      if (!newName) {
+        return;
+      }
+      body = {
+        newName: newName
+      };
+    } else if (action === 'accept') {
+      const expectedCompletionDate = prompt("Expected completion date (yyyy-MM-dd):");
+      if (!expectedCompletionDate) {
+        return;
+      }
+      body = {
+        expectedCompletionDate: expectedCompletionDate
+      }
+    }
     const url = order._links[action].href;
-    this.http.post(url, {}).subscribe(
+    this.http.post(url, body).subscribe(
       _ => this.reload(), 
-      error => alert(error));
+      response => alert([response.error.error, response.error.message].join("\n")));
   }
 
   private reload(): void {

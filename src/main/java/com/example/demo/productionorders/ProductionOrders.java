@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 @RepositoryRestResource
-public interface ProductionOrderRepository extends CrudRepository<ProductionOrder, Long> {
+public interface ProductionOrders extends CrudRepository<ProductionOrder, Long> {
 
 }

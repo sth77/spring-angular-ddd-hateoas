@@ -13,6 +13,7 @@ export interface Resource {
 export interface ProductionOrder {
     name: string;
     state: string;
+    expectedCompletionDate: Date;
 }
 
 export interface ProductionOrderResource extends ProductionOrder, Resource {
