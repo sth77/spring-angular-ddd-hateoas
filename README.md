@@ -1,22 +1,24 @@
 # spring-angular-ddd-hateoas
 
-Code from my talk "Building better GUIs using DDD and Spring HATEOAS"
+Code from my talk and blog post "Building better GUIs using DDD and Spring HATEOAS"
 
 ## Dependencies / Features
 
 * Spring Data JDBC for Persistence (well suited for persisting DDD-style aggregates)
 * Spring Rest Repositories to publish a HAL REST API
+* Integration test showing how presence and absence of links can be tested (credits to O. Drotbohm!)
 * Lombok for less boiler plate code
+* frontend-maven-plugin and Spring MVC configuration to build and serve the Angular app out of Spring Boot
 * Spring Boot DevTools for auto reload of the backend on save
 * Angular 12 (for GUI)
 
 ## Business case
 
-A product manager submits a production order to the system (Operation "submit")
-A manufacturer accepts the production order (Operation "accept")
+A product manager submits a production order to the system (Operation "submit"). If not submitted yet, the production order can be renamed.
+A manufacturer accepts the production order (Operation "accept"), indicating the expected delivery date, which must be in the future.
 
-Both operations are modelled as HAL links on the production orders in the REST API.
-The GUI uses the links to render or hide the button triggering the respective action.
+All three operations are modelled as HAL links on the production orders in the REST API.
+The GUI uses the links to render or hide the button which triggers the respective action.
 
 ## Benefits Frontend
 
@@ -32,10 +34,10 @@ The GUI uses the links to render or hide the button triggering the respective ac
 
 ## How to run
 
-1) Start the Spring application (mvn spring-boot:run)
-2) Start the Angular frontend (cd src/main/frontend, npm start)
+> ./mvnw clean spring-boot:run
 
-The backend is served on localhost:8080/api, the frontend on localhost:4200
+Open http://localhost:8080 in a web browser to see the GUI
+Open http://localhost:8080/api to see the capabilities of the API. Follow the links to resources and actions.
 
 ## License
 
