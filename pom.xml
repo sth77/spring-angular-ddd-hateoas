@@ -88,7 +88,7 @@
 						<goals>
 							<goal>install-node-and-npm</goal>
 						</goals>
-						<phase>generate-sources</phase>
+						<phase>initialize</phase>
 					</execution>
 					<execution>
 						<id>npm install</id>
@@ -98,6 +98,7 @@
 						<configuration>
 							<arguments>install</arguments>
 						</configuration>
+						<phase>initialize</phase>
 					</execution>
 					<execution>
 						<id>npm version</id>
