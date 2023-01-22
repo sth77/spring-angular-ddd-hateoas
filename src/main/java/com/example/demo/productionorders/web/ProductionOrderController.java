@@ -4,6 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelProcessor;
@@ -18,13 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.productionorders.ProductionOrder;
-import com.example.demo.productionorders.ProductionOrder.ProductionOrderState;
 import com.example.demo.productionorders.ProductionOrders;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
-import lombok.val;
 
 @RestController
 @RequestMapping("/api/productionOrders")
@@ -62,13 +61,15 @@ public class ProductionOrderController implements RepresentationModelProcessor<E
 	}
 	
 	@Override
-	public EntityModel<ProductionOrder> process(EntityModel<ProductionOrder> model) {		
-		val order = model.getContent();
-		if (order.getState() == ProductionOrderState.DRAFT) {
+	public EntityModel<ProductionOrder> process(EntityModel<ProductionOrder> model) {
+		var order = Objects.requireNonNull(model.getContent());
+		if (order.canRename()) {
 			model.add(linkTo(methodOn(getClass()).rename(order.getId(), null)).withRel(REL_RENAME));
+		}
+		if (order.canSubmit()) {
 			model.add(linkTo(methodOn(getClass()).submit(order.getId())).withRel(REL_SUBMIT));
 		}
-		if (order.getState() == ProductionOrderState.SUBMITTED) {
+		if (order.canAccept()) {
 			model.add(linkTo(methodOn(getClass()).accept(order.getId(), null)).withRel(REL_ACCEPT));
 		}				
 		return model;
