@@ -6,7 +6,6 @@ import java.util.Objects;
 import org.springframework.data.annotation.Id;
 
 import lombok.Getter;
-import lombok.val;
 
 @Getter
 public class ProductionOrder {
@@ -18,30 +17,42 @@ public class ProductionOrder {
 	private ProductionOrderState state;
 
 	public static ProductionOrder create(String name) {
-		val result = new ProductionOrder();
+		var result = new ProductionOrder();
 		result.name = name;
 		result.state = ProductionOrderState.DRAFT;
 		return result;
 	}
+
+	public boolean canRename() {
+		return state == ProductionOrderState.DRAFT;
+	}
 	
 	public ProductionOrder renameTo(String newName) {
-		if (state != ProductionOrderState.DRAFT) {
+		if (!canRename()) {
 			throw new IllegalStateException("Cannot rename production order in state " + state);
 		}
 		name = newName;
 		return this;
 	}
+
+	public boolean canSubmit() {
+		return state == ProductionOrderState.DRAFT;
+	}
 		
 	public ProductionOrder submit() {
-		if (state != ProductionOrderState.DRAFT) {
+		if (!canSubmit()) {
 			throw new IllegalStateException("Cannot submit production order in state " + state);
 		}
 		state = ProductionOrderState.SUBMITTED;
 		return this;
 	}
 
+	public boolean canAccept() {
+		return state == ProductionOrderState.SUBMITTED;
+	}
+
 	public ProductionOrder accept(LocalDate expectedCompletionDate) {
-		if (state != ProductionOrderState.SUBMITTED) {
+		if (!canAccept()) {
 			throw new IllegalStateException("Cannot accept production order in state " + state);
 		}
 		Objects.requireNonNull(expectedCompletionDate, "expectedCompletionDate is required to submit a production order");
