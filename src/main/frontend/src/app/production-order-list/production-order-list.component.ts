@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProductionOrderResource } from '../model';
 
 const API = "/api";
-const REL = "productionOrders"; 
+const REL = "productionOrders";
 
 @Component({
   selector: 'app-production-order-list',
@@ -27,13 +27,13 @@ export class ProductionOrderListComponent implements OnInit {
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
-    this.http.get(API).subscribe(
-      response => {
+    this.http.get(API).subscribe({
+      next: (response) => {
         this.root = response;
         this.reload();
       },
-      error => alert(error)
-    );
+      error: (e) => alert(e)
+      });
   }
 
   can(action: string, order: any): boolean {
@@ -60,17 +60,18 @@ export class ProductionOrderListComponent implements OnInit {
       }
     }
     const url = order._links[action].href;
-    this.http.post(url, body).subscribe(
-      _ => this.reload(), 
-      response => alert([response.error.error, response.error.message].join("\n")));
+    this.http.post(url, body).subscribe({
+      next: _ => this.reload(),
+      error: response => alert([response.error.error, response.error.message].join("\n"))
+    });
   }
 
   private reload(): void {
     if (this.root) {
-      this.http.get<any>(this.root._links[REL].href).subscribe(
-        response => this.productionOrders = response._embedded[REL],
-        error => alert(error)
-      )
+      this.http.get<any>(this.root._links[REL].href).subscribe({
+        next: response => this.productionOrders = response._embedded[REL],
+        error: error => alert(error)
+      });
     }
   }
 
